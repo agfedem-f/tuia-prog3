@@ -31,11 +31,8 @@ class DepthFirstSearch:
                 continue
             
             expanded[node.state] = True
-
             
             for action in grid.actions(node.state): 
-                
-                
                 successor_state = grid.result(node.state, action) 
                 
                 if successor_state not in expanded:
