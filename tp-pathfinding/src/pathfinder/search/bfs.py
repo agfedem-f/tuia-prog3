@@ -22,8 +22,48 @@ class BreadthFirstSearch:
         reached = {}
         reached[root.state] = True
 
-        # Initialize frontier with the root node
-        # TODO Complete the rest!!
-        # ...
+        # Apply objective test
+        if grid.objective_test(root.state):
+            return Solution(root, reached)
 
-        return NoSolution(reached)
+        # Initialize frontier with the root node
+        frontier = QueueFrontier()
+        frontier.add(root)
+
+        while True:
+
+            # Check if frontier is empty
+            if frontier.is_empty():
+                return NoSolution(reached)
+
+            # Remove next node from frontier
+            node = frontier.remove()
+
+            # Expand node
+            for action in grid.actions(node.state):
+
+                # Get the successor
+                successor = grid.result(node.state, action)
+
+                # Check if the successor was already reached
+                if successor in reached:
+                    continue
+
+                # Initialize the son node
+                son = Node(
+                    "",
+                    successor,
+                    cost=node.cost + grid.individual_cost(node.state, action),
+                    parent=node,
+                    action=action,
+                )
+
+                # Mark the successor as reached
+                reached[successor] = True
+
+                # Apply objective test
+                if grid.objective_test(successor):
+                    return Solution(son, reached)
+
+                # Add son to frontier
+                frontier.add(son)
